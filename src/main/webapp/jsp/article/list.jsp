@@ -17,15 +17,20 @@
 	<div>
 		<div><a href="<%= request.getContextPath() %>/home/main">메인</a></div>
 	</div>
-
-	<ul>
-		<% 
+	
+	<table border>
+		<%
 		for (Map<String, Object> articleMap : articleListMap) {
 		%>
-			<li><%= articleMap.get("id") %> | <%= articleMap.get("updateDate") %> | <a href="detail?id=<%= articleMap.get("id") %>"><%= articleMap.get("title") %></a></li>
+			<tr>
+				<td><%= articleMap.get("id") %></td>
+				<td><%= articleMap.get("updateDate") %></td>
+				<td><a href="detail?id=<%= articleMap.get("id") %>"><%= articleMap.get("title") %></a></td>
+			</tr>	
 		<%
 		}
-		%>
-	</ul>
+		%>			
+	</table>
+	
 </body>
 </html>
