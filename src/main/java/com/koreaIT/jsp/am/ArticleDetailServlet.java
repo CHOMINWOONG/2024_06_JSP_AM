@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
 
+import com.koreaIT.jsp.am.config.Config;
 import com.koreaIT.jsp.am.util.DBUtil;
 import com.koreaIT.jsp.am.util.SecSql;
 
@@ -27,8 +28,8 @@ public class ArticleDetailServlet extends HttpServlet {
 		Connection connection = null;
 
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			Class.forName(Config.getDBDriverName());
+			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
 			
 			int id = Integer.parseInt(request.getParameter("id"));
 			

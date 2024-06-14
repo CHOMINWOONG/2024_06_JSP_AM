@@ -12,7 +12,7 @@
 <body>
 
 	<h2>게시물 작성</h2>
-
+	
 	<form action="doWrite" method="post">
 		<div>
 			<div>제목 : <input type="text" name="title" placeholder="제목을 입력해주세요"/></div>

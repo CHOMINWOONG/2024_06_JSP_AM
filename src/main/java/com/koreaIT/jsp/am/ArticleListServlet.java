@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.koreaIT.jsp.am.config.Config;
 import com.koreaIT.jsp.am.util.DBUtil;
 import com.koreaIT.jsp.am.util.SecSql;
 
@@ -28,9 +29,8 @@ public class ArticleListServlet extends HttpServlet {
 		Connection connection = null;
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-			
+			Class.forName(Config.getDBDriverName());
+			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
 			int cPage = 1;
 
 			if (request.getParameter("page") != null && request.getParameter("page").length() != 0) {

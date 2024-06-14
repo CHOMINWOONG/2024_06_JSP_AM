@@ -15,37 +15,38 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/article/doWrite")
-public class ArticleDoWriteServlet extends HttpServlet {
+@WebServlet("/article/doModify")
+public class ArticleDoModifyServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		response.setContentType("text/html; charset=UTF-8;");
-		
+
 		final String URL = "jdbc:mysql://localhost:3306/jsp_am?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
 		final String USER = "root";
 		final String PASSWORD = "";
-		
+
 		Connection connection = null;
 
 		try {
 			Class.forName(Config.getDBDriverName());
 			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
-			
+
+			int id = Integer.parseInt(request.getParameter("id"));
 			String title = request.getParameter("title");
 			String body = request.getParameter("body");
-			
+
 			SecSql sql = new SecSql();
-			sql.append("INSERT INTO article");
-			sql.append("SET regDate = NOW()");
-			sql.append(", updateDate = NOW()");
+			sql.append("UPDATE article");
+			sql.append("SET updateDate = NOW()");
 			sql.append(", title = ?", title);
 			sql.append(", `body` = ?", body);
-			
-			int id = DBUtil.insert(connection, sql);
-			
-			response.getWriter().append(String.format("<script>alert('%d번 글이 작성되었습니다'); location.replace('list');</script>", id));
+			sql.append("WHERE id = ?", id);
+
+			DBUtil.update(connection, sql);
+
+			response.getWriter().append(String.format("<script>alert('%d번 글이 수정되었습니다'); location.replace('detail?id=%d');</script>", id, id));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -60,7 +61,7 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
