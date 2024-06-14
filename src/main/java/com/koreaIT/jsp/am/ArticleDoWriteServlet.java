@@ -23,10 +23,6 @@ public class ArticleDoWriteServlet extends HttpServlet {
 		
 		response.setContentType("text/html; charset=UTF-8;");
 		
-		final String URL = "jdbc:mysql://localhost:3306/jsp_am?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-		final String USER = "root";
-		final String PASSWORD = "";
-		
 		Connection connection = null;
 
 		try {

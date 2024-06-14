@@ -21,27 +21,23 @@ public class ArticleModifyServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		final String URL = "jdbc:mysql://localhost:3306/jsp_am?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-		final String USER = "root";
-		final String PASSWORD = "";
-
+		
 		Connection connection = null;
 
 		try {
 			Class.forName(Config.getDBDriverName());
 			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
-
+			
 			int id = Integer.parseInt(request.getParameter("id"));
-
+			
 			SecSql sql = new SecSql();
 			sql.append("SELECT * FROM article");
 			sql.append("WHERE id = ?", id);
-
+			
 			Map<String, Object> articleMap = DBUtil.selectRow(connection, sql);
-
+			
 			request.setAttribute("articleMap", articleMap);
-
+			
 			request.getRequestDispatcher("/jsp/article/modify.jsp").forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();

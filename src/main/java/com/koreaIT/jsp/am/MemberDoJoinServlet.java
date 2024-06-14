@@ -15,34 +15,47 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/article/doModify")
-public class ArticleDoModifyServlet extends HttpServlet {
+@WebServlet("/member/doJoin")
+public class MemberDoJoinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		response.setContentType("text/html; charset=UTF-8;");
-		
+
 		Connection connection = null;
 
 		try {
 			Class.forName(Config.getDBDriverName());
 			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
-			
-			int id = Integer.parseInt(request.getParameter("id"));
-			String title = request.getParameter("title");
-			String body = request.getParameter("body");
-			
+
+			String loginId = request.getParameter("loginId");
+			String loginPw = request.getParameter("loginPw");
+			String loginPwChk = request.getParameter("loginPwChk");
+			String name = request.getParameter("name");
+
 			SecSql sql = new SecSql();
-			sql.append("UPDATE article");
-			sql.append("SET updateDate = NOW()");
-			sql.append(", title = ?", title);
-			sql.append(", `body` = ?", body);
-			sql.append("WHERE id = ?", id);
-			
-			DBUtil.update(connection, sql);
-			
-			response.getWriter().append(String.format("<script>alert('%d번 글이 수정되었습니다'); location.replace('detail?id=%d');</script>", id, id));
+			sql.append("SELECT COUNT(id) FROM `member`");
+			sql.append("WHERE loginId = ?", loginId);
+
+			int loginIdDupChk = DBUtil.selectRowIntValue(connection, sql);
+
+			if (loginIdDupChk == 1) {
+				response.getWriter().append(String.format("<script>alert('[ %s ]은(는) 이미 사용중인 아이디입니다'); history.back();</script>", loginId));
+				return;
+			}
+
+			sql = new SecSql();
+			sql.append("INSERT INTO `member`");
+			sql.append("SET regDate = NOW()");
+			sql.append(", updateDate = NOW()");
+			sql.append(", loginId = ?", loginId);
+			sql.append(", loginPw = ?", loginPw);
+			sql.append(", `name` = ?", name);
+
+			DBUtil.insert(connection, sql);
+
+			response.getWriter().append(String.format("<script>alert('%s님이 가입되었습니다'); location.replace('../home/main');</script>", loginId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -57,7 +70,7 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);

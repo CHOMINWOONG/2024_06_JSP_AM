@@ -22,15 +22,13 @@ public class ArticleListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final String URL = "jdbc:mysql://localhost:3306/jsp_am?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-		final String USER = "root";
-		final String PASSWORD = "";
 
 		Connection connection = null;
 
 		try {
 			Class.forName(Config.getDBDriverName());
 			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
+			
 			int cPage = 1;
 
 			if (request.getParameter("page") != null && request.getParameter("page").length() != 0) {
