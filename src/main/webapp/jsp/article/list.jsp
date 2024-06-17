@@ -9,6 +9,7 @@
 	int cPage = (int) request.getAttribute("cPage");
 	int from = (int) request.getAttribute("from");
 	int end = (int) request.getAttribute("end");
+	int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 %>
 
 <!DOCTYPE html>
@@ -22,9 +23,18 @@
 		<div><a href="<%= request.getContextPath() %>/home/main">메인</a></div>
 	</div>
 	
-	<div>
-		<a href="write">글쓰기</a>
-	</div>
+	
+	<%
+	if (loginedMemberId != -1) {
+	%>
+		<div>
+			<a href="write">글쓰기</a>
+		</div>
+	<%
+	}
+	%>
+			
+	
 	
 	<table border=1>
 		<colgroup>

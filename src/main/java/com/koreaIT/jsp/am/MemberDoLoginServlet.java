@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.koreaIT.jsp.am.config.Config;
 import com.koreaIT.jsp.am.util.DBUtil;
@@ -16,8 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/article/doWrite")
-public class ArticleDoWriteServlet extends HttpServlet {
+@WebServlet("/member/doLogin")
+public class MemberDoLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,23 +31,30 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			Class.forName(Config.getDBDriverName());
 			connection = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUsr(), Config.getDBPW());
 			
-			String title = request.getParameter("title");
-			String body = request.getParameter("body");
-			
-			HttpSession session = request.getSession();
-			int loginedMemberId = (int) session.getAttribute("loginedMemberId");
+			String loginId = request.getParameter("loginId");
+			String loginPw = request.getParameter("loginPw");
 			
 			SecSql sql = new SecSql();
-			sql.append("INSERT INTO article");
-			sql.append("SET regDate = NOW()");
-			sql.append(", updateDate = NOW()");
-			sql.append(", memberId = ?", (int) session.getAttribute("loginedMemberId"));
-			sql.append(", title = ?", title);
-			sql.append(", `body` = ?", body);
+			sql.append("SELECT * FROM `member`");
+			sql.append("WHERE loginId = ?", loginId);
 			
-			int id = DBUtil.insert(connection, sql);
+			Map<String, Object> memberMap = DBUtil.selectRow(connection, sql);
 			
-			response.getWriter().append(String.format("<script>alert('%d번 글이 작성되었습니다'); location.replace('list');</script>", id));
+			if (memberMap.isEmpty()) {
+				response.getWriter().append(String.format("<script>alert('[ %s ]은(는) 존재하지 않는 아이디입니다'); location.replace('login');</script>", loginId));
+				return;
+			}
+			
+			if (memberMap.get("loginPw").equals(loginPw) == false) {
+				response.getWriter().append("<script>alert('비밀번호가 일치하지 않습니다'); location.replace('login');</script>");
+				return;
+			}
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("loginedMemberId", memberMap.get("id"));
+			session.setAttribute("loginedMemberLoginId", memberMap.get("loginId"));
+			
+			response.getWriter().append(String.format("<script>alert('%s님 환영합니다~'); location.replace('../home/main');</script>", loginId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

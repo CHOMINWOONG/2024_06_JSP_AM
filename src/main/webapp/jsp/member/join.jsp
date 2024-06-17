@@ -9,7 +9,7 @@
 <body>
 	<h2>회원 가입</h2>
 	
-	<<script>
+	<script>
 		const joinFormSubmit = function(form) {
 			form.loginId.value = form.loginId.value.trim();
 			form.loginPw.value = form.loginPw.value.trim();

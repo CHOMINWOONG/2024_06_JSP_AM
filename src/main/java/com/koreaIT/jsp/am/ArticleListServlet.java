@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/list")
 public class ArticleListServlet extends HttpServlet {
@@ -62,6 +63,14 @@ public class ArticleListServlet extends HttpServlet {
 			request.setAttribute("totalPageCnt", totalPageCnt);
 			request.setAttribute("articleListMap", articleListMap);
 			
+			HttpSession session = request.getSession();
+			int loginedMemberId = -1;
+			
+			if (session.getAttribute("loginedMemberId") != null) {
+				loginedMemberId = (int) session.getAttribute("loginedMemberId");
+			}
+			
+			request.setAttribute("loginedMemberId", loginedMemberId);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
