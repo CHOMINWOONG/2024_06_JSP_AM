@@ -1,6 +1,7 @@
 package com.koreaIT.jsp.am;
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -59,12 +60,6 @@ public class ArticleListServlet extends HttpServlet {
 			
 			List<Map<String, Object>> articleListMap = DBUtil.selectRows(connection, sql);
 			
-			request.setAttribute("cPage", cPage);
-			request.setAttribute("from", from);
-			request.setAttribute("end", end);
-			request.setAttribute("totalPageCnt", totalPageCnt);
-			request.setAttribute("articleListMap", articleListMap);
-			
 			HttpSession session = request.getSession();
 
 			int loginedMemberId = -1;
@@ -72,8 +67,16 @@ public class ArticleListServlet extends HttpServlet {
 			if (session.getAttribute("loginedMemberId") != null) {
 				loginedMemberId = (int) session.getAttribute("loginedMemberId");
 			}
-
+			request.setAttribute("loginedMemberLoginId", session.getAttribute("loginedMemberLoginId"));
 			request.setAttribute("loginedMemberId", loginedMemberId);
+			request.setAttribute("cPage", cPage);
+			request.setAttribute("from", from);
+			request.setAttribute("end", end);
+			request.setAttribute("totalPageCnt", totalPageCnt);
+			request.setAttribute("articleListMap", articleListMap);
+			
+
+
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
