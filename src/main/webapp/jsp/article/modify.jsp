@@ -4,6 +4,7 @@
 
 <%
 	Map<String, Object> articleMap = (Map<String, Object>) request.getAttribute("articleMap");
+	int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 %>
 
 <!DOCTYPE html>

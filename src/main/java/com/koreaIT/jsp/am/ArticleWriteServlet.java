@@ -2,6 +2,7 @@ package com.koreaIT.jsp.am;
 
 import java.io.IOException;
 
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,10 +17,10 @@ public class ArticleWriteServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-		
+
 		if (session.getAttribute("loginedMemberId") == null) {
 			response.setContentType("text/html; charset=UTF-8;");
-			response.getWriter().append(String.format("<script>alert('로그인 후 이용해주세요.'); location.replace('../memeber/login');</script>"));
+			response.getWriter().append("<script>alert('로그인 후 이용해주세요'); location.replace('../member/login');</script>");
 			return;
 		}
 		
